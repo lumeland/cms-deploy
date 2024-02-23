@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
-deno_exec="${HOME}/.deno/bin/deno"
-
-# Install Deno
+# Install packages
+apt update
+apt install unzip # Required to install Deno
+apt install snapd -y
+snap install core
+snap install --classic certbot
 curl -fsSL https://deno.land/install.sh | sh
+
+deno_exec="${HOME}/.deno/bin/deno"
 
 # Clone repository
 read -p "SSH URL of the repository to clone: " repo
@@ -11,12 +16,6 @@ read -p "Folder target: " folder
 
 dir="$(pwd)/${folder}"
 git clone "${repo}" "${dir}"
-
-# Install SSL certificate
-apt update
-apt install snapd -y
-snap install core
-snap install --classic certbot
 
 read -p "Your email for important notifications: " email
 read -p "Which domain do you want to use? " domain
