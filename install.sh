@@ -22,8 +22,8 @@ read -p "Which domain do you want to use? " domain
 
 certbot certonly --agree-tos --standalone -m "${email}" -d "${domain}"
 
-# Create the server.ts file
-cat > ${dir}/server.ts << EOF
+# Create the serve.ts file
+cat > ${dir}/serve.ts << EOF
 import site from "./_config.ts";
 import cms from "./_cms.ts";
 import { adapter } from "lume/cms.ts";
@@ -49,7 +49,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-ExecStart=${deno_exec} run -A admin.ts
+ExecStart=${deno_exec} run -A serve.ts
 WorkingDirectory=${dir}
 User=root
 Restart=always
