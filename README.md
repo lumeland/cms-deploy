@@ -5,9 +5,11 @@
    - This script was tested only on Ubuntu 20.04.
 2. Create a `A` record in the DNS settings of your domain to the server IP. For
    example, `cms.example.com`.
-3. Enter in the server with SSH and run the [install.sh](install.sh) script. It
-   will ask you for some info:
-
+3. Log in from SSH and run:
+   ```sh
+   curl https://raw.githubusercontent.com/lumeland/cms-deploy/main/install.sh > install.sh && sh install.sh
+   ```
+4. After some time, the script will ask you for some info:
    - The **URL of the repository**. Example: `git@github.com:user/repo.git`.
    - The **directory to clone**. By default is `www`.
    - An **email**. It's used for git commits, or to create the SSL certificate.
@@ -19,5 +21,5 @@
      - Paste the key printed in the terminal.
      - Make sure to check "Allow write access".
 
-4. When the script is finished, open the domain in your browser. You could be
+5. When the script is finished, open the domain in your browser. You could be
    able to see your site and edit the pages.
