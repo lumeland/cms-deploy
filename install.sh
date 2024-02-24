@@ -22,7 +22,7 @@ echo "and allow write access:"
 echo "---"
 cat ~/.ssh/id_rsa.pub
 echo "---"
-read done
+read added
 
 # Clone repository
 dir="$(pwd)/${dir:-www}"
