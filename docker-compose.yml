@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  lume_cms:
+    container_name: lume_cms
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - 8000:8000
+    volumes:
+      - .:/app
+      # - ~/.ssh/id_rsa:/root/.ssh/id_rsa
+      - ~/.gitconfig:/etc/.gitconfig
+
+  caddy:
+    container_name: lume_cms_caddy
+    image: caddy
+    depends_on:
+      - lume_cms
+    restart: unless-stopped
+    command: caddy reverse-proxy --from https://${CMS_DEPLOY_DOMAIN:-localhost}:443 --to http://lume_cms:8000
+    ports:
+      - 80:80
+      - 443:443
