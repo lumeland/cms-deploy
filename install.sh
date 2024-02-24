@@ -13,6 +13,8 @@ read -p "The SSH URL of the repository: " repo
 read -p "The directory to clone [www]: " dir
 read -p "Your email: " email
 read -p "The domain: " domain
+read -p "Username [admin]: " user
+read -p "Password: " pass
 
 # Create a SSH key
 ssh-keygen -t rsa -b 4096 -C "${email}" -f ~/.ssh/id_rsa
@@ -38,6 +40,7 @@ import cms from "./_cms.ts";
 import { adapter } from "lume/cms.ts";
 
 site.options.location = new URL("https://${domain}");
+cms.options.auth = { method: "basic", users: { ${user:-admin}: "${pass}" }};
 
 const app = await adapter({ site, cms });
 
