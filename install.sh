@@ -26,15 +26,19 @@ cat ~/.ssh/id_rsa.pub
 echo "---"
 read added
 
-# Clone repository
+# Setup git repository
 dir="$(pwd)/${dir:-www}"
 git clone "${repo}" "${dir}"
+echo "/_serve_lumecms.ts" > ~/.gitignore
+git config --global user.email "${email}"
+git config --global user.name LumeCMS
+git config --global core.excludesfile '~/.gitignore'
 
 # SSL certificate
 certbot certonly --agree-tos --standalone -m "${email}" -d "${domain}"
 
-# Create the serve.ts file
-cat > ${dir}/serve.ts << EOF
+# Create the _serve_lumecms.ts file
+cat > ${dir}/_serve_lumecms.ts << EOF
 import site from "./_config.ts";
 import cms from "./_cms.ts";
 import { adapter } from "lume/cms.ts";
@@ -63,7 +67,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-ExecStart=${HOME}/.deno/bin/deno run -A serve.ts
+ExecStart=${HOME}/.deno/bin/deno run -A _serve_lumecms.ts
 WorkingDirectory=${dir}
 User=root
 Restart=always
