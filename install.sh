@@ -8,18 +8,27 @@ snap install core
 snap install --classic certbot
 curl -fsSL https://deno.land/install.sh | sh
 
-deno_exec="${HOME}/.deno/bin/deno"
+# Ask for required variables
+read -p "The SSH URL of the repository: " repo
+read -p "The directory to clone [www]: " dir
+read -p "Your email: " email
+read -p "The domain: " domain
+
+# Create a SSH key
+ssh-keygen -t rsa -b 4096 -C "${email}" -f ~/.ssh/id_rsa
+
+echo "Add the following deploy key to the GitHub repository settings"
+echo "and allow write access:"
+echo "---"
+cat ~/.ssh/id_rsa.pub
+echo "---"
+read done
 
 # Clone repository
-read -p "SSH URL of the repository to clone: " repo
-read -p "Folder target: " folder
-
-dir="$(pwd)/${folder}"
+dir="$(pwd)/${dir:-www}"
 git clone "${repo}" "${dir}"
 
-read -p "Your email for important notifications: " email
-read -p "Which domain do you want to use? " domain
-
+# SSL certificate
 certbot certonly --agree-tos --standalone -m "${email}" -d "${domain}"
 
 # Create the serve.ts file
@@ -27,6 +36,8 @@ cat > ${dir}/serve.ts << EOF
 import site from "./_config.ts";
 import cms from "./_cms.ts";
 import { adapter } from "lume/cms.ts";
+
+site.options.location = new URL("https://${domain}");
 
 const app = await adapter({ site, cms });
 
@@ -49,7 +60,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-ExecStart=${deno_exec} run -A serve.ts
+ExecStart=${HOME}/.deno/bin/deno run -A serve.ts
 WorkingDirectory=${dir}
 User=root
 Restart=always
