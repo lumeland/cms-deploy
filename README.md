@@ -9,8 +9,9 @@
    ```sh
    curl https://raw.githubusercontent.com/lumeland/cms-deploy/main/install.sh > install.sh && sh install.sh
    ```
-4. After some time, the script will ask you for some info:
+4. After updating and installing some packages, the script will ask you for some info:
    - The **URL of the repository**. Example: `git@github.com:user/repo.git`.
+   
    - The **directory to clone**. By default is `www`.
    - An **email**. It's used for git commits, or to create the SSL certificate.
    - The **domain** for the CMS: `cms.example.com`.
