@@ -9,16 +9,15 @@ curl -fsSL https://deno.land/install.sh | sh
 
 # Ask for required variables
 read -p "The SSH URL of the repository: " repo
-read -p "The directory to clone [www]: " dir
 read -p "Your email: " email
 read -p "The domain: " domain
 read -p "Username [admin]: " user
 read -p "Password: " pass
 read -p "Port used for localhost [8000]: " port
 
-dir="$(pwd)/${dir:-www}"
-user="${user:-admin}"
 port="${port:-8000}"
+user="${user:-admin}"
+dir="$(pwd)/www_${port}"
 
 # Create a SSH key
 ssh-keygen -t rsa -b 4096 -C "${email}" -f ~/.ssh/id_rsa
