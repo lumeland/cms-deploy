@@ -79,12 +79,21 @@ EOF
 systemctl enable "lumecms_${port}.service"
 systemctl start "lumecms_${port}.service"
 
-# Create/update Caddyfile
-cat >> $(pwd)/Caddyfile << EOF
+# Create Caddyfile
+cat > /etc/caddy/Caddyfile << EOF
 ${domain} {
   reverse_proxy :${port}
 }
 EOF
 
-caddy fmt --overwrite
-caddy reload
+caddy fmt /etc/caddy/Caddyfile --overwrite
+systemctl restart caddy
+systemctl enable caddy
+
+# Setup firewall
+ufw allow ssh
+ufw allow 80
+ufw allow 443
+ufw enable
+
+systemctl enable ufw
