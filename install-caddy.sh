@@ -68,6 +68,7 @@ ExecStart=${HOME}/.deno/bin/deno run -A _serve_lumecms.ts
 WorkingDirectory=${dir}
 User=root
 Restart=always
+LimitNOFILE=65535
 
 [Install]
 WantedBy=multi-user.target
