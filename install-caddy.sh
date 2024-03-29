@@ -98,21 +98,24 @@ systemctl enable ufw
 
 # Restart the process if the CPU usage is above 95%
 # https://github.com/denoland/deno/issues/23033
-cat > "$(pwd)/cron_cpu.sh" << EOF
+script_path="$(pwd)/cron_cpu.sh"
+
+cat > ${script_path} << EOF
 #!/usr/bin/env bash
 
-# Get the current CPU usage
-CPU_USAGE=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+CPU_USAGE_THRESHOLD=99
+CPU_USAGE=\$(top -bn1 | grep 'Cpu(s)' | sed 's/.*, *\\([0-9.]*\\)%* id.*/\\1/' | awk '{printf "%.0f", 100 - \$1}')
 
-# Check if the CPU usage is greater than 95%
-if (( $(echo "$CPU_USAGE > 95" | bc -l) )); then
-    systemctl restart lumecms
-    systemctl restart caddy
+if [ "\$CPU_USAGE" -gt "\$CPU_USAGE_THRESHOLD" ]; then
+  systemctl restart lumecms
+  systemctl restart caddy
 fi
 EOF
 
+chmod +x "${script_path}"
+
 # Setup the cron job to run the script
 crontab -l > /tmp/mycron
-echo "*/5 * * * * $(pwd)/cron_cpu.sh" >> /tmp/mycron
+echo "*/5 * * * * ${script_path}" >> /tmp/mycron
 crontab /tmp/mycron
 rm /tmp/mycron
