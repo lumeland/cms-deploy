@@ -7,13 +7,11 @@
    example, `cms.example.com`.
 3. Log in from SSH and run:
    ```sh
-   curl https://raw.githubusercontent.com/lumeland/cms-deploy/main/install.sh > install.sh && sh install.sh
+   curl https://raw.githubusercontent.com/lumeland/cms-deploy/main/install-caddy.sh > install.sh && sh install.sh
    ```
 4. After updating and installing some packages, the script will ask you for some
    info:
    - The **URL of the repository**. Example: `git@github.com:user/repo.git`.
-
-   - The **directory to clone**. By default is `www`.
    - An **email**. It's used for git commits, or to create the SSL certificate.
    - The **domain** for the CMS: `cms.example.com`.
    - An **username**. It's used to login in the CMS. By default is `admin`.
