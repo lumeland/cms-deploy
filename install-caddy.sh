@@ -13,11 +13,9 @@ read -p "Your email: " email
 read -p "The domain: " domain
 read -p "Username [admin]: " user
 read -p "Password: " pass
-read -p "Port used for localhost [8000]: " port
 
-port="${port:-8000}"
 user="${user:-admin}"
-dir="$(pwd)/www_${port}"
+dir="$(pwd)/www"
 
 # Create a SSH key
 ssh-keygen -t rsa -b 4096 -C "${email}" -f ~/.ssh/id_rsa
@@ -48,14 +46,14 @@ cms.options.auth = { method: "basic", users: { ${user}: "${pass}" }};
 const app = await adapter({ site, cms });
 
 Deno.serve({
-  port: ${port},
+  port: 8000,
   handler: app.fetch,
 });
 
 EOF
 
 # Create the Deno service
-cat > "/etc/systemd/system/lumecms_${port}.service" << EOF
+cat > "/etc/systemd/system/lumecms.service" << EOF
 [Unit]
 Description=LumeCMS
 Documentation=http://lume.land
@@ -76,13 +74,13 @@ WantedBy=multi-user.target
 EOF
 
 # Setup the service
-systemctl enable "lumecms_${port}.service"
-systemctl start "lumecms_${port}.service"
+systemctl enable "lumecms.service"
+systemctl start "lumecms.service"
 
 # Create Caddyfile
 cat > /etc/caddy/Caddyfile << EOF
 ${domain} {
-  reverse_proxy :${port}
+  reverse_proxy :8000
 }
 EOF
 
@@ -97,3 +95,24 @@ ufw allow 443
 ufw enable
 
 systemctl enable ufw
+
+# Restart the process if the CPU usage is above 95%
+# https://github.com/denoland/deno/issues/23033
+cat > "$(pwd)/cron_cpu.sh" << EOF
+#!/usr/bin/env bash
+
+# Get the current CPU usage
+CPU_USAGE=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+
+# Check if the CPU usage is greater than 95%
+if (( $(echo "$CPU_USAGE > 95" | bc -l) )); then
+    systemctl restart lumecms
+    systemctl restart caddy
+fi
+EOF
+
+# Setup the cron job to run the script
+crontab -l > /tmp/mycron
+echo "*/5 * * * * $(pwd)/cron_cpu.sh" >> /tmp/mycron
+crontab /tmp/mycron
+rm /tmp/mycron
