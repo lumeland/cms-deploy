@@ -38,7 +38,7 @@ git config --global core.excludesfile '~/.gitignore'
 cat > ${dir}/_serve_lumecms.ts << EOF
 import site from "./_config.ts";
 import cms from "./_cms.ts";
-import { adapter } from "lume/cms.ts";
+import adapter from "lume/cms/adapters/lume.ts";
 
 site.options.location = new URL("https://${domain}");
 cms.options.auth = { method: "basic", users: { ${user}: "${pass}" }};
