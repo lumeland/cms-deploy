@@ -29,27 +29,45 @@ read added
 
 # Setup git repository
 git clone "${repo}" "${dir}"
-echo "/_serve_lumecms.ts" > ~/.gitignore
+
+cat > ~/.gitignore << EOF
+_cms.lume.ts
+_cms.serve.ts
+EOF
+
 git config --global user.email "${email}"
 git config --global user.name LumeCMS
 git config --global core.excludesfile '~/.gitignore'
 
-# Create the _serve_lumecms.ts file
-cat > ${dir}/_serve_lumecms.ts << EOF
+# Create the _cms.lume.ts file to merge Lume and LumeCMS
+cat > ${dir}/_cms.lume.ts << EOF
 import site from "./_config.ts";
 import cms from "./_cms.ts";
 import adapter from "lume/cms/adapters/lume.ts";
 
+cms.options.auth = undefined;
 site.options.location = new URL("https://${domain}");
-cms.options.auth = { method: "basic", users: { ${user}: "${pass}" }};
 
-const app = await adapter({ site, cms });
+export default await adapter({ site, cms });
+EOF
 
-Deno.serve({
-  port: 8000,
-  handler: app.fetch,
+# Create the _cms.serve.ts file to serve LumeCMS
+cat > ${dir}/_cms.serve.ts << EOF
+import serve from "lume/cms/server/proxy.ts";
+
+export default serve({
+  serve: "_cms.lume.ts",
+  git: true,
+  auth: {
+    method: "basic",
+    users: {
+      "${user}": "${pass}"
+    }
+  },
+  env: {
+    LUME_LOGS: "error",
+  }
 });
-
 EOF
 
 # Create the Deno service
@@ -62,7 +80,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-ExecStart=${HOME}/.deno/bin/deno run -A _serve_lumecms.ts
+ExecStart=${HOME}/.deno/bin/deno serve -A _cms.serve.ts
 WorkingDirectory=${dir}
 User=root
 Restart=always
