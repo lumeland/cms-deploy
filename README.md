@@ -2,7 +2,7 @@
 
 1. Get a VPS from [Hetzner](https://www.hetzner.com/),
    [Digital Ocean](https://www.digitalocean.com/), or similar service.
-   - This script was tested only on Ubuntu 20.04.
+   - This script was tested only on Ubuntu 24.04.
 2. Create an `A` record in the DNS settings of your domain to the server IP. For
    example, `cms.example.com`.
 3. Log in from SSH and run:
@@ -11,7 +11,7 @@
    ```
 4. After updating and installing some packages, the script will ask you for some
    info:
-   - The **URL of the repository**. Example: `git@github.com:user/repo.git`.
+   - The **SSH URL of the repository**. Example: `git@github.com:user/repo.git`.
    - An **email**. It's used for git commits, or to create the SSL certificate.
    - The **domain** for the CMS: `cms.example.com`.
    - An **username**. It's used to login in the CMS. By default is `admin`.
