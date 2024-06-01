@@ -7,7 +7,7 @@
    example, `cms.example.com`.
 3. Log in from SSH and run:
    ```sh
-   curl https://raw.githubusercontent.com/lumeland/cms-deploy/main/install.sh > install.sh && sh install.sh
+   curl https://lumeland.github.io/cms-deploy/install.sh > install.sh && sh install.sh
    ```
 4. After updating and installing some packages, the script will ask you for some
    info:
