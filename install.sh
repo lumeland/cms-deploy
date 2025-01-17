@@ -43,7 +43,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-ExecStart=${HOME}/.deno/bin/deno serve -A https://deno.land/x/lume_cms_adapter/mod.ts -- --location=https://${domain}
+ExecStart=${HOME}/.deno/bin/deno serve -A https://deno.land/x/lume_cms_adapter@v0.1.3/mod.ts -- --location=https://${domain}
 WorkingDirectory=${dir}
 User=root
 Restart=always
