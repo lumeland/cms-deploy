@@ -11,8 +11,6 @@ curl -fsSL https://deno.land/install.sh | sh
 read -p "The SSH URL of the repository: " repo
 read -p "Your email: " email
 read -p "The domain: " domain
-read -p "Username [admin]: " user
-read -p "Password: " pass
 
 user="${user:-admin}"
 dir="$(pwd)/www"
