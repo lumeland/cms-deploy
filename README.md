@@ -1,5 +1,15 @@
 # How to deploy LumeCMS in a VPS
 
+In your deno.json file create the following task:
+
+```json
+{
+   "tasks": {
+      "cms:prod": "deno serve -A --env-file https://deno.land/x/lume_cms_adapter@v0.2.2/mod.ts"
+   }
+}
+```
+
 1. Get a VPS from [Hetzner](https://www.hetzner.com/),
    [Digital Ocean](https://www.digitalocean.com/), or similar service.
    - This script was tested only on Ubuntu 24.04.
