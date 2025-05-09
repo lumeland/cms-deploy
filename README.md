@@ -1,15 +1,6 @@
 # How to deploy LumeCMS in a VPS
 
-1. In your deno.json file create the following task:
-   ```jsonc
-   {
-     "tasks": {
-       // ...
-       "cms:prod": "deno serve -A --env-file https://deno.land/x/lume_cms_adapter@v0.2.2/mod.ts"
-     }
-   }
-   ```
-2. Enable the authentication and git in the CMS:
+1. Enable the authentication and git in the CMS:
    ```js
    // user and pass are environment variables, stored in an .env file
    const user = Deno.env.get("CMS_USER") ?? "admin";
@@ -22,6 +13,18 @@
    // Enable git to pull/push changes
    cms.git();
    ```
+2. In your deno.json file create the following task:
+   ```jsonc
+   {
+     "tasks": {
+       // ...
+       "cms:prod": "deno serve -A --env-file https://deno.land/x/lume_cms_adapter@v0.2.2/mod.ts"
+     }
+   }
+   ```
+   You can run `deno task cms:prod` in your computer to check if it works fine.
+   The CMS should ask you for the user/pass and you should see a "Sync" button in the CMS
+   to push/pull changes to the git repository.
 3. Get a VPS from [Hetzner](https://www.hetzner.com/),
    [Digital Ocean](https://www.digitalocean.com/), or similar service.
    - This script was tested only on Ubuntu 24.04.
