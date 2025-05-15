@@ -30,6 +30,7 @@ git clone "${repo}" "${dir}"
 
 git config --global user.email "${email}"
 git config --global user.name LumeCMS
+git config --global pull.rebase false
 
 # Create the Deno service
 cat > "/etc/systemd/system/lumecms.service" << EOF
