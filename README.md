@@ -18,7 +18,7 @@
    {
      "tasks": {
        // ...
-       "cms:prod": "deno serve -A --env-file https://deno.land/x/lume_cms_adapter@v0.2.2/mod.ts"
+       "cms:prod": "deno task lume --proxied --serve --cms"
      }
    }
    ```

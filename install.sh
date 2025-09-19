@@ -42,7 +42,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-ExecStart=${HOME}/.deno/bin/deno task cms:prod -- --location=https://${domain}
+ExecStart=${HOME}/.deno/bin/deno task cms:prod --location=https://${domain}
 WorkingDirectory=${dir}
 User=root
 Restart=always
