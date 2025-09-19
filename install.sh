@@ -12,7 +12,6 @@ read -p "The SSH URL of the repository: " repo
 read -p "Your email: " email
 read -p "The domain: " domain
 
-user="${user:-admin}"
 dir="$(pwd)/www"
 
 # Create a SSH key
@@ -31,6 +30,14 @@ git clone "${repo}" "${dir}"
 git config --global user.email "${email}"
 git config --global user.name LumeCMS
 git config --global pull.rebase false
+
+# Create environment variables
+cat > "${dir}/.env" << EOF
+CMS_USER=admin
+CMS_PASSWORD=
+EOF
+
+echo "File ${dir}/.env created. Please, edit the environment variables"
 
 # Create the Deno service
 cat > "/etc/systemd/system/lumecms.service" << EOF
