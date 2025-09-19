@@ -30,7 +30,6 @@ git clone "${repo}" "${dir}"
 
 git config --global user.email "${email}"
 git config --global user.name LumeCMS
-git config --global pull.rebase false
 
 # Create the Deno service
 cat > "/etc/systemd/system/lumecms.service" << EOF
@@ -42,7 +41,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-ExecStart=${HOME}/.deno/bin/deno task cms:prod -- --location=https://${domain}
+ExecStart=${HOME}/.deno/bin/deno task cms:prod --location=https://${domain}
 WorkingDirectory=${dir}
 User=root
 Restart=always
