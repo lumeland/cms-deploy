@@ -14,11 +14,10 @@
    cms.git();
    ```
 2. In your deno.json file create the following task:
-   ```jsonc
+   ```json
    {
      "tasks": {
-       // ...
-       "cms:prod": "deno task lume --proxied --serve --cms"
+       "cms:prod": "deno serve -A lume/serve.ts"
      }
    }
    ```
