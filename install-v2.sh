@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
 
 # Install and update packages
+apt update -y
 apt install -y git unzip debian-keyring debian-archive-keyring apt-transport-https curl
 
-# Install caddy and xcaddy to build a custom binary
-curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-xcaddy-archive-keyring.gpg
+# Install caddy
 curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-xcaddy.list
 curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
 chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg
 chmod o+r /etc/apt/sources.list.d/caddy-stable.list
+
+# Install xcaddy for a custom build
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-xcaddy-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/xcaddy/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-xcaddy.list
+chmod o+r /usr/share/keyrings/caddy-xcaddy-archive-keyring.gpg
+chmod o+r /etc/apt/sources.list.d/caddy-xcaddy.list
 
 apt update -y
 apt install caddy xcaddy
@@ -26,8 +31,6 @@ systemctl restart caddy
 curl -fsSL https://deno.land/install.sh > deno.sh
 sh deno.sh -y
 rm deno.sh
-
-binary_path="/usr/bin/caddy"
 
 # Ask for required variables
 read -p "The SSH URL of the repository: " repo
