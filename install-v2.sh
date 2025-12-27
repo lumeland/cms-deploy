@@ -83,6 +83,7 @@ WantedBy=multi-user.target
 EOF
 
 # Create Caddyfile
+mkdir -p /etc/caddy
 cat > /etc/caddy/Caddyfile << EOF
 ${domain} {
   reverse_proxy {
