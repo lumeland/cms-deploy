@@ -50,15 +50,6 @@ EOF
 echo "File ${dir}/.env created. Please, edit the environment variables"
 
 # Setup Caddy service
-groupadd --system caddy
-useradd --system \
-  --gid caddy \
-  --create-home \
-  --home-dir /var/lib/caddy \
-  --shell /usr/sbin/nologin \
-  --comment "Caddy+Lume web server" \
-  caddy
-
 cat > /etc/systemd/system/caddy.service << EOF
 [Unit]
 Description=Caddy
@@ -68,8 +59,7 @@ Requires=network-online.target
 
 [Service]
 Type=notify
-User=caddy
-Group=caddy
+User=root
 ExecStart=/usr/bin/caddy run --environ --config /etc/caddy/Caddyfile
 ExecReload=/usr/bin/caddy reload --config /etc/caddy/Caddyfile --force
 TimeoutStopSec=5s
