@@ -37,6 +37,8 @@ systemctl restart caddy
 curl -fsSL https://deno.land/install.sh > deno.sh
 sh deno.sh -y
 rm deno.sh
+source ~/.bashrc
+deno="$(which deno)"
 
 # Ask for required variables
 read -p "The SSH URL of the repository: " repo
@@ -100,6 +102,7 @@ ${domain} {
   reverse_proxy {
 		dynamic lume {
 			directory "${dir}"
+			deno "${deno}"
 		}
 
 		lb_retries 10
