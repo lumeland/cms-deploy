@@ -2,10 +2,7 @@
 
 ## Requirements
 
-- A VPS from [Hetzner](https://www.hetzner.com/),
-  [Digital Ocean](https://www.digitalocean.com/), or similar service with Ubuntu
-  24.04
-- A domain pointing to the server, like `cms.example.com`.
+- A VPS with Ubuntu 24.04 and root access.
 
 ## LumeCMS configuration
 
