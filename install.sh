@@ -1,11 +1,44 @@
 #!/usr/bin/env bash
 
-# Install packages
+# Install and update packages
+apt update -y
+apt install -y debian-keyring debian-archive-keyring apt-transport-https curl git unzip
+
+# Install Caddy
 curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
 curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list
+chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+chmod o+r /etc/apt/sources.list.d/caddy-stable.list
 apt update -y
-apt install -y git unzip caddy
-curl -fsSL https://deno.land/install.sh | sh
+apt install -y caddy
+
+# Install custom Caddy with Lume
+if [ $(uname -m) = "x86_64" ]; then
+  target="linux-amd64"
+else
+  target="linux-arm64"
+fi
+binary_url="https://github.com/lumeland/caddy-lume/releases/latest/download/caddy-lume-${target}.tar.gz"
+curl --fail --location --progress-bar --output caddy.tar.gz "$binary_url"
+tar -xf caddy.tar.gz
+mv "bin/caddy-lume-$target" ./caddy
+chmod +x caddy
+rm caddy.tar.gz
+rm -rf bin
+
+# Configure official Caddy and custom Caddy-Lume
+dpkg-divert --divert /usr/bin/caddy.default --rename /usr/bin/caddy
+mv ./caddy /usr/bin/caddy.custom
+update-alternatives --install /usr/bin/caddy caddy /usr/bin/caddy.default 10
+update-alternatives --install /usr/bin/caddy caddy /usr/bin/caddy.custom 50
+systemctl restart caddy
+
+# Install Deno
+curl -fsSL https://deno.land/install.sh > deno.sh
+sh deno.sh -y
+rm deno.sh
+source ~/.bashrc
+deno="$(which deno)"
 
 # Ask for required variables
 read -p "The SSH URL of the repository: " repo
@@ -39,35 +72,42 @@ EOF
 
 echo "File ${dir}/.env created. Please, edit the environment variables"
 
-# Create the Deno service
-cat > "/etc/systemd/system/lumecms.service" << EOF
+# Setup Caddy service
+cat > /etc/systemd/system/caddy.service << EOF
 [Unit]
-Description=LumeCMS
-Documentation=https://lume.land
-Wants=network-online.target
-After=network-online.target
+Description=Caddy
+Documentation=https://caddyserver.com/docs/
+After=network.target network-online.target
+Requires=network-online.target
 
 [Service]
-Type=simple
-ExecStart=${HOME}/.deno/bin/deno task cms:prod --location=https://${domain}
-WorkingDirectory=${dir}
+Type=notify
 User=root
-Restart=always
-LimitNOFILE=65535
+ExecStart=/usr/bin/caddy run --environ --config /etc/caddy/Caddyfile
+ExecReload=/usr/bin/caddy reload --config /etc/caddy/Caddyfile --force
+TimeoutStopSec=5s
+LimitNOFILE=1048576
+PrivateTmp=true
+ProtectSystem=full
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 
 [Install]
 WantedBy=multi-user.target
-
 EOF
 
-# Setup the service
-systemctl enable "lumecms.service"
-systemctl start "lumecms.service"
-
 # Create Caddyfile
+mkdir -p /etc/caddy
 cat > /etc/caddy/Caddyfile << EOF
 ${domain} {
-  reverse_proxy :8000
+  reverse_proxy {
+		dynamic lume {
+			directory "${dir}"
+			deno "${deno}"
+		}
+
+		lb_retries 10
+		lb_try_interval 2s
+	}
 }
 EOF
 
