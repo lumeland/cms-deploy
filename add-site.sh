@@ -8,23 +8,24 @@ read -p "The domain: " domain
 dir="$(pwd)/${domain}"
 
 # Create a SSH key
-ssh-keygen -t rsa -b 4096 -C "${email}" -N "" -f "~/.ssh/id_rsa_${domain}"
+ssh_file="$(pwd)/.ssh/id_rsa_${domain}"
+ssh-keygen -t rsa -b 4096 -C "${email}" -N "" -f "${ssh_file}"
 
 echo "Add the following deploy key to the GitHub repository settings"
 echo "and allow write access:"
 echo "---"
-cat "~/.ssh/id_rsa_${domain}.pub"
+cat "${ssh_file}.pub"
 echo "---"
 read _
 
 # Setup git repository
-git -c core.sshCommand="ssh -i ~/.ssh/id_rsa_${domain}" clone "${repo}" "${dir}"
+git -c core.sshCommand="ssh -i ${ssh_file}" clone "${repo}" "${dir}"
 
 cd "${dir}"
 git config user.email "${email}"
 git config user.name LumeCMS
 git config pull.rebase false
-git config core.sshCommand "ssh -i ~/.ssh/id_rsa_${domain}"
+git config core.sshCommand "ssh -i ${ssh_file}"
 cd ..
 
 # Create environment variables
