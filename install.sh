@@ -54,7 +54,7 @@ rm deno.sh
 ufw allow ssh
 ufw allow 80
 ufw allow 443
-ufw enable
+ufw --force enable
 
 systemctl enable ufw
 
