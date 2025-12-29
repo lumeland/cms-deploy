@@ -60,4 +60,4 @@ systemctl enable ufw
 
 # Add site
 curl https://lumeland.github.io/cms-deploy/add-site.sh > add-site.sh
-sh install.sh
+sh add-site.sh
