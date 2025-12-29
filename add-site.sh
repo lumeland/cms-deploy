@@ -55,3 +55,6 @@ EOF
 caddy fmt /etc/caddy/Caddyfile --overwrite
 systemctl restart caddy
 systemctl enable caddy
+
+echo "The site ${domain} has added. Test it at https://${domain}"
+echo "Run 'sh add-site.sh' to add additional Lume sites"

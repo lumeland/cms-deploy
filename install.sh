@@ -64,4 +64,7 @@ read -p "Would you like to add a site? (Y/n): " add_site
 add_site=${add_site:-Y}
 if [[ "$add_site" == "y" || "$add_site" == "Y" ]]; then
   sh add-site.sh
+else
+  echo "No site added"
+  echo "Run 'sh add-site.sh' to add Lume sites to this server"
 fi
