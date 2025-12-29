@@ -27,11 +27,11 @@ cms.git();
    ```sh
    curl https://lumeland.github.io/cms-deploy/install.sh > install.sh && sh install.sh
    ```
-2. After updating and installing some packages, the script will ask you for some
-   info:
+2. After updating and installing some packages, the script will ask you to add a
+   site. If you choose yes (Y) it will ask you for the following info:
    - The **SSH URL of the repository**. Example: `git@github.com:user/repo.git`.
    - An **email**. It's used for git commits, or to create the SSL certificate.
-   - The **domain** for the CMS: `cms.example.com`.
+   - The **domain** for the site: `cms.example.com`.
    - During the process, it will ask you to add a deploy key.
      - Go to the GitHub respository / Settings / Deploy keys / Add deploy key.
      - Paste the key printed in the terminal.
@@ -39,6 +39,6 @@ cms.git();
      - Once the key is added, press Enter in the terminal to continue.
 
 3. Done! When the script is finished you should see your site and be able to
-   edit the pages.
+   edit the pages (it might take a while the first time).
 
 To add additional sites, run `sh add-site.sh`.
