@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- A VPS with Ubuntu 24.04 and root access.
+- A VPS with Ubuntu 24.04, root access and a domain like `cms.example.com`.
 
 ## LumeCMS configuration
 
@@ -40,3 +40,5 @@ cms.git();
 
 3. Done! When the script is finished you should see your site and be able to
    edit the pages.
+
+To add additional sites, run `sh add-site.sh`.
