@@ -29,12 +29,20 @@ git config core.sshCommand "ssh -i ${ssh_file}"
 cd ..
 
 # Create environment variables
+read -p "Create an .env file? (Y/n): " response
+response=${response:-Y}
+
+if [[ "$response" == "y" || "$response" == "Y" ]]; then
+read -p "CMS_USER=" user
+read -p "CMS_PASSWORD=" password
+
 cat > "${dir}/.env" << EOF
-CMS_USER=admin
-CMS_PASSWORD=
+CMS_USER=${user}
+CMS_PASSWORD=${password}
 EOF
 
-echo "File ${dir}/.env created. Please, edit the environment variables"
+echo "File ${dir}/.env created."
+fi
 
 # Create Caddyfile
 deno="$(pwd)/.deno/bin/deno"
