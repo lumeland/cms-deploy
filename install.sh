@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Install and update packages
 apt update -y
@@ -62,7 +62,7 @@ systemctl enable ufw
 curl https://lumeland.github.io/cms-deploy/add-site.sh > add-site.sh
 read -p "Would you like to add a site? (Y/n): " add_site
 add_site=${add_site:-Y}
-if [[ "$add_site" == "y" || "$add_site" == "Y" ]]; then
+if [ "$add_site" = "y" || "$add_site" = "Y" ]; then
   sh add-site.sh
 else
   echo "No site added"
