@@ -38,7 +38,10 @@ cms.git();
      - Check "Allow write access".
      - Once the key is added, press Enter in the terminal to continue.
 
-3. Done! When the script is finished you should see your site and be able to
+3. You can configure the server to serve the production site. You have to set a
+   domain (`example.com`) and the name of the production branch (by default
+   `main`).
+4. Done! When the script is finished you should see your site and be able to
    edit the pages (it might take a while the first time).
 
 To add additional sites, run `sh add-site.sh`.
