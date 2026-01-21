@@ -99,7 +99,11 @@ EOF
 	cat >> /etc/caddy/Caddyfile << EOF
 ${prod_domain} {
 	root * ${prod_dir}/www
+	encode
   file_server
+	log {
+		output file ${prod_dir}/access.log
+	}
 }
 EOF
 fi
