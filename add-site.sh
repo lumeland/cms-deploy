@@ -60,6 +60,45 @@ ${domain} {
 }
 EOF
 
+# Configure the production site
+read -p "Would you like to serve the production site? (Y/n): " prod_site
+prod_site=${prod_site:-Y}
+
+if [[ "$prod_site" == "y" || "$prod_site" == "Y" ]]; then
+  read -p "Domain of the production site: " prod_domain
+  read -p "Production branch (main): " prod_branch
+	prod_dir="$(pwd)/${prod_domain}"
+	prod_branch=${prod_branch:-main}
+
+	# Git hook to build the site on push the production branch
+	cat > "${dir}/.git/hooks/pre-push" << EOF
+#!/bin/sh
+
+remote="$1"
+url="$2"
+prod_branch="refs/heads/${prod_branch}"
+
+while read local_ref local_sha remote_ref remote_sha
+do
+	if [ "\$local_ref" = \$prod_branch ]
+	then
+		${deno} task build --location=https://${prod_domain} --dest=${prod_dir}
+	fi
+done
+
+exit 0
+EOF
+
+	# Configure Caddy to serve the site
+	cat >> /etc/caddy/Caddyfile << EOF
+${prod_domain} {
+	root * ${prod_dir}
+  file_server
+}
+EOF
+fi
+
+# Restart services
 caddy fmt /etc/caddy/Caddyfile --overwrite
 systemctl restart caddy
 systemctl enable caddy
