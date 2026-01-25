@@ -61,10 +61,10 @@ ${domain} {
 EOF
 
 # Configure the production site
-read -p "Would you like to serve the production site? (Y/n): " prod_site
-prod_site=${prod_site:-Y}
+read -p "Would you like to serve the production site? (y/N): " prod_site
+prod_site=${prod_site:-N}
 
-if [ "$prod_site" = "y" || "$prod_site" = "Y" ]; then
+if [ "$prod_site" = "y" ] || [ "$prod_site" = "Y" ]; then
   read -p "Domain of the production site: " prod_domain
   read -p "Production branch (main): " prod_branch
 	prod_dir="$(pwd)/${prod_domain}"
