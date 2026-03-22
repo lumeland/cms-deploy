@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- A VPS with Ubuntu 24.04 with **root access** and a domain like
+- A VPS with Ubuntu 24.04 with **sudo privileges** and a domain like
   `cms.example.com`.
 
 ## LumeCMS configuration
