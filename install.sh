@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
 # Install and update packages
-apt update -y
-apt install -y debian-keyring debian-archive-keyring apt-transport-https curl git unzip
+sudo apt update -y
+sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl git unzip
 
 # Install Caddy with Lume
 if [ $(uname -m) = "x86_64" ]; then
@@ -17,12 +17,12 @@ mv "bin/caddy-lume-$target" ./caddy
 chmod +x caddy
 rm caddy.tar.gz
 rm -rf bin
-mv ./caddy /usr/bin/caddy
+sudo mv ./caddy /usr/bin/caddy
 
 # Setup Caddy service
-mkdir -p /etc/caddy
-touch /etc/caddy/Caddyfile
-cat > /etc/systemd/system/caddy.service << EOF
+sudo mkdir -p /etc/caddy
+sudo touch /etc/caddy/Caddyfile
+sudo tee /etc/systemd/system/caddy.service > /dev/null << EOF
 [Unit]
 Description=Caddy
 Documentation=https://caddyserver.com/docs/
@@ -51,12 +51,12 @@ DENO_INSTALL="${deno}" sh deno.sh -y --no-modify-path
 rm deno.sh
 
 # Setup firewall
-ufw allow ssh
-ufw allow 80
-ufw allow 443
-ufw --force enable
+sudo ufw allow ssh
+sudo ufw allow 80
+sudo ufw allow 443
+sudo ufw --force enable
 
-systemctl enable ufw
+sudo systemctl enable ufw
 
 # Add site
 curl https://lumeland.github.io/cms-deploy/add-site.sh > add-site.sh

@@ -46,7 +46,7 @@ fi
 
 # Create Caddyfile
 deno="$(pwd)/.deno/bin/deno"
-cat >> /etc/caddy/Caddyfile << EOF
+sudo tee -a /etc/caddy/Caddyfile > /dev/null << EOF
 ${domain} {
   reverse_proxy {
 		dynamic lume {
@@ -96,7 +96,7 @@ EOF
 	chmod +x "${dir}/.git/hooks/pre-push"
 
 	# Configure Caddy to serve the site
-	cat >> /etc/caddy/Caddyfile << EOF
+	sudo tee -a /etc/caddy/Caddyfile > /dev/null << EOF
 ${prod_domain} {
 	root * ${prod_dir}/www
 	encode
@@ -109,9 +109,9 @@ EOF
 fi
 
 # Restart services
-caddy fmt /etc/caddy/Caddyfile --overwrite
-systemctl restart caddy
-systemctl enable caddy
+sudo caddy fmt /etc/caddy/Caddyfile --overwrite
+sudo systemctl restart caddy
+sudo systemctl enable caddy
 
 echo "The site ${domain} has added. Test it at https://${domain}"
 echo "Run 'sh add-site.sh' to add additional Lume sites"
