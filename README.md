@@ -4,6 +4,7 @@
 
 - A VPS with Ubuntu 24.04 with **sudo privileges** and a domain like
   `cms.example.com`.
+- At least 2Gb RAM (4Gb recommended).
 
 ## LumeCMS configuration
 
